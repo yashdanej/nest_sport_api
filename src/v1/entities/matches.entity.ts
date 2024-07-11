@@ -1,4 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Team } from './teams.entity';
+import { Venue } from './venue.entity';
+import { Competition } from './competitions.entity';
+import { MatchInning } from './match-innings.entity';
 
 @Entity('matches')
 export class Matches {
@@ -56,11 +60,17 @@ export class Matches {
   @Column({ nullable: true })
   competition_id: string;
 
-  @Column({ nullable: true })
-  teama: string;
+  @ManyToOne(() => Competition, { eager: true }) // Assuming it's a Many-to-One relation with Venue entity
+  @JoinColumn({ name: 'competition_id' }) // Foreign key column in the Matches table
+  competition: Competition;
 
-  @Column({ nullable: true })
-  teamb: string;
+  @ManyToOne(() => Team, { eager: true }) // Assuming it's a Many-to-One relation with Team entity
+  @JoinColumn({ name: 'teama' }) // Foreign key column in the Matches table
+  teama: Team;
+
+  @ManyToOne(() => Team, { eager: true }) // Assuming it's a Many-to-One relation with Team entity
+  @JoinColumn({ name: 'teamb' }) // Foreign key column in the Matches table
+  teamb: Team;
 
   @Column({ nullable: true, type: 'datetime' })
   date_start: Date;
@@ -76,6 +86,10 @@ export class Matches {
 
   @Column({ nullable: true })
   venue_id: string;
+
+  @ManyToOne(() => Venue, { eager: true }) // Assuming it's a Many-to-One relation with Venue entity
+  @JoinColumn({ name: 'venue_id' }) // Foreign key column in the Matches table
+  venue: Venue;
 
   @Column('text', { nullable: true })
   umpires: string;
@@ -139,4 +153,7 @@ export class Matches {
 
   @UpdateDateColumn({ type: 'datetime', nullable: true })
   updated_at: Date;
+
+  @OneToMany(() => MatchInning, inning => inning.match)
+  innings: MatchInning[];
 }

@@ -25,6 +25,19 @@ import { InnningStatistic } from './v1/entities/inning-statistics.entity';
 import { ScorecardFallwicket } from './v1/entities/scorecard-fallwickets.entity';
 import { CompetitionStanding } from './v1/entities/competition-standing.entity';
 import { Json } from './v1/entities/json.entity';
+import { Round } from './v1/entities/round.entity';
+import { Venue } from './v1/entities/venue.entity';
+import { Commentary } from './v1/entities/commentary.entity';
+import { ScorecardFielder } from './v1/entities/scorecard-fielder.entity';
+import { ScorecardNotBat } from './v1/entities/scorecard-not-bat.entity';
+import { ScorecardBatsman } from './v1/entities/scorecard-batsman.entity';
+import { ScorecardBowler } from './v1/entities/scorecard-bowler.entity';
+import { ScorecardCurrentPartnership } from './v1/entities/scorecard-current-partnership.entity';
+import { ScorecardEquation } from './v1/entities/scorecard-equation.entity';
+import { ScorecardCurrentPartnershipBatsman } from './v1/entities/scorecard-current-partnership-batsman.entity';
+import { ScorecardExtraRun } from './v1/entities/scorecard-extra-run.entity';
+import { PlayerStatisticsBatting } from './v1/entities/player-statistics-batting.entity';
+import { PlayerStatisticsBowling } from './v1/entities/player-statistics-bowling.entity';
 
 @Module({
   imports: [
@@ -35,10 +48,10 @@ import { Json } from './v1/entities/json.entity';
       username: 'root',
       password: 'Yash@1212888',
       database: 'pappapi',
-      entities: [User, Sport, Plan, UserSubscription, ApiCallLog, Season, Matches, Competition, MatchesTeam, Team, Player, LiveMatches, MatchFantasyPoint, MatchInning, IccRanking, IccGroup, InnningStatistic, ScorecardFallwicket, CompetitionStanding, Json],
+      entities: [User, PlayerStatisticsBatting, PlayerStatisticsBowling, ScorecardFielder, ScorecardNotBat, ScorecardFallwicket, ScorecardBatsman, ScorecardBowler, ScorecardCurrentPartnership, ScorecardEquation, ScorecardCurrentPartnershipBatsman, ScorecardExtraRun, Commentary, Venue, Round, Sport, Plan, UserSubscription, ApiCallLog, Season, Matches, Competition, MatchesTeam, Team, Player, LiveMatches, MatchFantasyPoint, MatchInning, IccRanking, IccGroup, InnningStatistic, CompetitionStanding, Json],
       synchronize: false,
     }),
-    TypeOrmModule.forFeature([User, Sport, Plan, UserSubscription, ApiCallLog, Season, Matches, Competition, MatchesTeam, Team, Player, LiveMatches, MatchFantasyPoint, MatchInning, IccRanking, IccGroup, InnningStatistic, ScorecardFallwicket, CompetitionStanding, Json]),
+    TypeOrmModule.forFeature([User, PlayerStatisticsBatting, PlayerStatisticsBowling, ScorecardFielder, ScorecardNotBat, ScorecardFallwicket, ScorecardBatsman, ScorecardBowler, ScorecardCurrentPartnership, ScorecardEquation, ScorecardCurrentPartnershipBatsman, ScorecardExtraRun, Commentary, Venue, Round, Sport, Plan, UserSubscription, ApiCallLog, Season, Matches, Competition, MatchesTeam, Team, Player, LiveMatches, MatchFantasyPoint, MatchInning, IccRanking, IccGroup, InnningStatistic, CompetitionStanding, Json]),
     V1Module,
   ],
   controllers: [AppController],

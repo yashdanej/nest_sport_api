@@ -1,4 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+// src/entities/competition.entity.ts
+
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { Round } from './round.entity'; // Adjust path as per your project structure
 
 @Entity('competitions')
 export class Competition {
@@ -61,4 +64,7 @@ export class Competition {
 
   @UpdateDateColumn({ type: 'datetime', nullable: true })
   updated_at: Date;
+
+  @OneToMany(() => Round, round => round.competition)
+  rounds: Round[];
 }

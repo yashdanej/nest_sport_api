@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { Commentary } from './commentary.entity';
 
 @Entity('live_matches')
 export class LiveMatches {
@@ -55,6 +56,12 @@ export class LiveMatches {
 
   @Column('text', { nullable: true })
   bowlers_json: string;
+
+  // Define optional dynamic properties
+  batsman?: any;
+  bowlers?: any;
+  @OneToMany(() => Commentary, commentary => commentary.match)
+  commentaries?: Commentary[];
 
   @CreateDateColumn({ type: 'datetime' })
   created_at: Date;

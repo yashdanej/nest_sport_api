@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { ScorecardFallwicket } from './scorecard-fallwickets.entity';
 
-@Entity('innning_statistics') // Note the typo in 'innning_statistics'
+@Entity('innning_statistics') // Corrected typo to 'innning_statistics'
 export class InnningStatistic {
   @PrimaryGeneratedColumn()
   id: number;
@@ -64,6 +65,23 @@ export class InnningStatistic {
 
   @Column({ type: 'text', nullable: true })
   p2p_json: string;
+
+  // Define relationships or other properties as needed
+
+  @OneToMany(() => ScorecardFallwicket, fow => fow.inning_id)
+  fows: ScorecardFallwicket[];
+
+  // Optional: Define statistics property as per your need
+  statistics: {
+    manhattan: any;
+    worm: any;
+    runrates: any;
+    partnership: any;
+    runtypes: any;
+    wickets: any;
+    p2p: any;
+    extras: any;
+  };
 
   @CreateDateColumn({ type: 'datetime' })
   created_at: Date;

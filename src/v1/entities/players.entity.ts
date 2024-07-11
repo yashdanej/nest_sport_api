@@ -1,4 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+// player.entity.ts
+
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { PlayerStatisticsBatting } from './player-statistics-batting.entity';
+import { PlayerStatisticsBowling } from './player-statistics-bowling.entity';
 
 @Entity('players')
 export class Player {
@@ -79,4 +83,10 @@ export class Player {
 
   @UpdateDateColumn({ type: 'datetime', nullable: true })
   updated_at: Date;
+
+  @OneToMany(() => PlayerStatisticsBatting, batting => batting.player)
+  batting: PlayerStatisticsBatting[];
+
+  @OneToMany(() => PlayerStatisticsBowling, bowling => bowling.player)
+  bowling: PlayerStatisticsBowling[];
 }

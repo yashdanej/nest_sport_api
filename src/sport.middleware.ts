@@ -41,8 +41,8 @@ export class SportMiddleware implements NestMiddleware {
         response: 'Your Plan is inactive',
       });
     }
-
-    if (subscription.expire_date < new Date()) {
+    
+    if (new Date(subscription.expire_date) < new Date()) {
       return res.status(HttpStatus.OK).json({
         status: true,
         response: 'Your Plan is expired',

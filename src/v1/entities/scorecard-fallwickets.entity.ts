@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { InnningStatistic } from './inning-statistics.entity'; // Adjust the import path as per your file structure
 
 @Entity('scorecard_fallwickets')
 export class ScorecardFallwicket {
@@ -34,6 +35,10 @@ export class ScorecardFallwicket {
 
   @Column({ nullable: true })
   number: string;
+
+  @ManyToOne(() => InnningStatistic, inningStatistic => inningStatistic.fows)
+  @JoinColumn({ name: 'inning_id' })
+  inningStatistic: InnningStatistic;
 
   @CreateDateColumn({ type: 'datetime' })
   created_at: Date;
