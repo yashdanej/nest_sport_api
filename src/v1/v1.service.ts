@@ -18,10 +18,17 @@ import { ScorecardFallwicket } from './entities/scorecard-fallwickets.entity';
 import { Player } from './entities/players.entity';
 import { IccGroup } from './entities/icc-groups.entity';
 import { IccRanking } from './entities/icc-rankings.entity';
+import { UserSubscription } from './entities/user-subscription.entity';
+import { ApiCallLog } from './entities/api-call-log.entity';
+import { Request } from 'express';
 
 @Injectable()
 export class V1Service {
     constructor(
+        @InjectRepository(UserSubscription)
+        private readonly userSubscriptionRepository: Repository<UserSubscription>,
+        @InjectRepository(ApiCallLog)
+        private readonly apiCallLogRepository: Repository<ApiCallLog>,
         @InjectRepository(Season)
         private readonly seasonRepository: Repository<Season>,
         @InjectRepository(Json)
@@ -247,7 +254,7 @@ export class V1Service {
     }
   }
 
-  async matches(status: string = '', page: number = 1, limit: number = 10) {
+  async matches(status: string = '', page: number = 1, limit: number = 10, req: any) {
     try {
       // Build the base query
       let query = this.matchesRepository
@@ -262,6 +269,11 @@ export class V1Service {
       if (status !== '') {
         query = query.where('matches.status = :status', { status });
       }
+      console.log("status", status);
+      
+      // Log the SQL query and parameters for debugging
+      console.log('SQL Query:', query.getQuery());
+      console.log('Parameters:', query.getParameters());
 
       // Paginate results
       const [matches, total] = await query
@@ -269,20 +281,50 @@ export class V1Service {
         .skip((page - 1) * limit)
         .getManyAndCount();
 
-      const page_data = {
-        current_page: page,
-        last_page: Math.ceil(total / limit),
-        per_page: limit,
+      // Page data for pagination information
+      const pageData = {
+        currentPage: page,
+        lastPage: Math.ceil(total / limit),
+        perPage: limit,
         total,
       };
 
+      // Return status and response with matches and page data
+      // throw new Error(`Failed`);
       return {
         status: true,
-        response: { matches, page_data },
+        response: { matches, pageData },
       };
     } catch (error) {
+      try {
+        // Fetch the latest log entry for the user
+        const token = req.headers['token'] as string;
+        const subscription = await this.findSubscriptionByToken(token);
+        console.log("subscription", subscription);
+        
+        if (subscription) {
+          const latestLog = await this.apiCallLogRepository
+            .createQueryBuilder('api_call_logs')
+            .where('api_call_logs.userId = :userId', { userId: subscription.user.id })
+            .orderBy('api_call_logs.created_at', 'DESC')
+            .getOne();
+            console.log("latestLog", latestLog);
+          if (latestLog) {
+            console.log("latestLog in");
+            await this.apiCallLogRepository.update(latestLog.id, { failed: 1 });
+          }
+        }
+      } catch (logError) {
+        console.error(`Failed to update api_call_logs: ${logError.message}`);
+      }
       throw new Error(`Failed to fetch matches: ${error.message}`);
     }
+  }
+  private async findSubscriptionByToken(token: string): Promise<UserSubscription | undefined> {
+    return this.userSubscriptionRepository.findOne({
+      where: { token },
+      relations: ['plan', 'user'],
+    });
   }
 
   async matchScoreCard(matchId: number) {

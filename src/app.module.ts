@@ -47,6 +47,7 @@ import { PlayerStatisticsBowling } from './v1/entities/player-statistics-bowling
       port: 3306,
       username: 'root',
       password: 'Yash@1212888',
+      // password: 'Albatros_Med_@2024hash',
       database: 'pappapi',
       entities: [User, PlayerStatisticsBatting, PlayerStatisticsBowling, ScorecardFielder, ScorecardNotBat, ScorecardFallwicket, ScorecardBatsman, ScorecardBowler, ScorecardCurrentPartnership, ScorecardEquation, ScorecardCurrentPartnershipBatsman, ScorecardExtraRun, Commentary, Venue, Round, Sport, Plan, UserSubscription, ApiCallLog, Season, Matches, Competition, MatchesTeam, Team, Player, LiveMatches, MatchFantasyPoint, MatchInning, IccRanking, IccGroup, InnningStatistic, CompetitionStanding, Json],
       synchronize: false,

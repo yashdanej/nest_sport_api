@@ -1,4 +1,4 @@
-import { Controller, Get, NotFoundException, Param, ParseIntPipe, Query } from '@nestjs/common';
+import { Controller, Get, NotFoundException, Param, ParseIntPipe, Query, Req } from '@nestjs/common';
 import { V1Service } from './v1.service';
 import { Competition } from './entities/competitions.entity';
 import { Team } from './entities/teams.entity';
@@ -62,8 +62,26 @@ export class V1Controller {
   }
 
   @Get('matches')
-  async matches() {
-    return this.v1Service.matches();
+  async matches(
+    @Query('status') status: string = '',
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+    @Req() req: Request
+  ) {
+    try {
+      const result = await this.v1Service.matches(status, page, limit, req);
+      console.log("result.status", result.status);
+      console.log("result.response", result.response);
+      return {
+        status: result.status,
+        response: result.response,
+      };
+    } catch (error) {
+      return {
+        status: false,
+        message: error.message,
+      };
+    }
   }
 
 

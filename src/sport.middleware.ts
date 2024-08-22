@@ -59,7 +59,7 @@ export class SportMiddleware implements NestMiddleware {
       });
     }
 
-    const planThreshold = +plan.api_call || 100000;
+    const planThreshold = +plan.api_call.split(' ')[0] || 100000;
     console.log("planThreshold", planThreshold);
 
     if (subscription.api_hits >= planThreshold) {
@@ -90,13 +90,36 @@ export class SportMiddleware implements NestMiddleware {
     });
   }
 
+  // private async logApiCall(userId: number, endpoint: string) {
+  //   try {
+  //     const log = this.apiCallLogRepository.create({
+  //       user: { id: userId },
+  //       sportId: 1,
+  //       endpoint,
+  //     });
+  //     console.log("logsss", log);
+      
+  //     const save = await this.apiCallLogRepository.save(log);
+  //     console.log("save", save);
+  //   } catch (error) {
+  //     console.error("Error saving API call log:", error); // Log the error
+  //   }
+  // }
   private async logApiCall(userId: number, endpoint: string) {
-    const log = this.apiCallLogRepository.create({
-      user: { id: userId },
-      endpoint,
-    });
-    await this.apiCallLogRepository.save(log);
-  }
+    try {
+        const log = this.apiCallLogRepository.create({
+            user: { id: userId },  // This line assumes that the user entity has an ID field
+            sportId: 1,            // Hardcoded sportId as per your requirement
+            endpoint,              // The endpoint being accessed
+        });
+        console.log("logsss", log);
+        
+        const save = await this.apiCallLogRepository.save(log);
+        console.log("save", save);
+    } catch (error) {
+        console.error("Error saving API call log:", error);
+    }
+}
 
   private async updateSubscriptionApiHits(subscription: UserSubscription) {
     await this.userSubscriptionRepository.save(subscription);
